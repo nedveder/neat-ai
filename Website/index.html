@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Compare Text Files</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<h1>Review my code</h1>
+
+<div class="container">
+    <div class="box">
+        <h2>My Code</h2>
+        <input type="file" id="file1" onchange="handleFile1(event)">
+        <pre id="content1"></pre>
+    </div>
+
+    <div class="box">
+        <h2>My API</h2>
+        <input type="file" id="file2" onchange="handleFile2(event)">
+        <pre id="content2"></pre>
+    </div>
+</div>
+
+<button id="compareButton" onclick="compareFiles()">Compare Files</button>
+
+<script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</body>
+</html>
