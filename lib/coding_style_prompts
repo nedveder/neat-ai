@@ -25,6 +25,10 @@ For every function we will check the following:
 
 11. Comments: Comments should be used sparingly to explain complex sections of code or to describe the intent behind certain decisions.
 
-# Function prompt
+# Function prompt feedback
 
 Check the coding style of the function '???' in the file '???' according to the parameters from before.
+
+# Function prompt improvement
+
+What are the improvements that can be made to the function '???' in the file '???' according to the parameters from before? Write them down in the text box below.
