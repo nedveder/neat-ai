@@ -31,16 +31,12 @@ class ServerSide:
             raise Exception("Code is not set, please call set_code first")
 
         style_suggestions = dict()
-        test_suggestions = dict()
+        test_suggestions = []
         if preferences['style']:
             style_suggestions = generate_coding_style.get_suggestions(self)
-            for function_name, function_suggestions in style_suggestions.items():
-                style_suggestions[function_name] = function_suggestions
 
         if preferences['tests']:
             test_suggestions = generate_tests.get_suggestions(self, self.code_, preferences['tests'])
-            for function_name, function_suggestions in test_suggestions.items():
-                test_suggestions[function_name] = function_suggestions
 
         return style_suggestions, test_suggestions
 
