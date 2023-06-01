@@ -1,8 +1,9 @@
 import streamlit as st
 import time
-
+import pandas as pd
 
 global code_data
+global return_data
 
 if 'key' not in st.session_state:
     st.session_state.key = 'UploadFile'
@@ -29,7 +30,7 @@ def run_testing():
     loading = st.empty()
     loading.write('Loading...')
     time.sleep(2)
-    call_api_test()
+    return_data = call_api_test()
     loading.empty()
     st.session_state.key = 'TestResults'
 
@@ -92,7 +93,19 @@ if st.session_state.key == 'Improve':
     suggested_code = st.code(code, language='python', line_numbers=True)
 
 if st.session_state.key == 'TestResults':
-    pass
+
+    to_add = []
+    df = pd.DataFrame(
+        [
+            {"Test": "st.selectbox", "Short description": "...", "Status": "Fail"},
+            {"Test": "st.balloons", "Short description": "...", "Status": "Fail"},
+            {"Test": "st.time_input", "Short description": "...", "Status": "Fail"},
+        ]
+    )
+    edited_df = st.experimental_data_editor(df)
+
+    # favorite_command = edited_df.loc[edited_df["rating"].idxmax()]["command"]
+    # st.markdown(f"Your favorite command is **{favorite_command}** 🎈")
 
 
 
