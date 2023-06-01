@@ -73,7 +73,7 @@ class ServerSide:
         :return:
         """
         for function_name in reversed(self.functions_):
-            function_source = ServerSide.get_function_source(self.code_, function_name)
+            function_source = self.get_function_source(function_name)
             yield function_source
 
 
