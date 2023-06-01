@@ -1,15 +1,26 @@
 import streamlit as st
 import time
+import pandas as pd
 
 
-global code_data
+class FunctionImprovements:
+    def __init__(self, old_code, new_code, comment):
+        self.old_code = old_code
+        self.new_code = new_code
+        self.comment = comment
+
 
 if 'key' not in st.session_state:
+    st.session_state["returned_data"] = None
+    st.session_state["keys"] = None
+    st.session_state["new_code_data"] = None
     st.session_state.key = 'UploadFile'
 
 
+
 def call_api_improve():
-    pass
+    return {"1": FunctionImprovements("old", "new", "your code is bad"),
+            "2": FunctionImprovements("old1", "new2", "your code is bad2")}
 
 
 def call_api_test():
@@ -20,16 +31,18 @@ def run_improve():
     loading = st.empty()
     loading.write('Loading...')
     time.sleep(2)
-    call_api_improve()
+    st.session_state["returned_data"] = call_api_improve()
+    st.session_state["keys"] = list(st.session_state["returned_data"].keys())
     loading.empty()
     st.session_state.key = 'Improve'
+
 
 
 def run_testing():
     loading = st.empty()
     loading.write('Loading...')
     time.sleep(2)
-    call_api_test()
+    st.session_state["returned_data"] = call_api_test()
     loading.empty()
     st.session_state.key = 'TestResults'
 
@@ -45,7 +58,6 @@ if st.session_state.key == 'UploadFile':
         st.session_state.key = 'ChooseOperation'
         ch_text.empty()
         ch_upload.empty()
-
 
 if st.session_state.key == 'ChooseOperation':
 
@@ -64,22 +76,17 @@ if st.session_state.key == 'ChooseOperation':
         st.session_state.key = 'loading'
         if improve_button:
             run_improve()
+            st.session_state.count = 0
         else:
             run_testing()
-
-
 
 if st.session_state.key == 'runningApi':
     # Define the initial code string
     pass
 
-
 if st.session_state.key == 'Improve':
-    code = '''def hello():
-            print("hello")'''
-    # Display the user's code with syntax highlighting
-    user_code = st.code(code, language='python', line_numbers=True)
-
+    returned_data = st.session_state["returned_data"]
+    keys = st.session_state["keys"]
     # Create empty placeholders for the 'accept yours' and 'accept theirs' buttons
     ch_accept_yours = st.empty()
     ch_accept_theirs = st.empty()
@@ -87,16 +94,31 @@ if st.session_state.key == 'Improve':
     # Create the 'accept yours' and 'accept theirs' buttons
     accept_yours = ch_accept_yours.button("Accept Yours")
     accept_theirs = ch_accept_theirs.button("Accept Theirs")
+    if accept_yours:
+        # ch_accept_yours.empty()
+        # ch_accept_theirs.empty()
+        st.session_state.count += 1
+        # if st.session_state.count == len(keys):
+        #     #todo remove everything and add download button to new code
+        #     st.session_state.key = 'finished'
+    if accept_theirs:
+        st.session_state.count += 1
+        # if st.session_state.count == len(keys):
+        #     #todo remove everything and add download button to new code
+        #     st.session_state.key = 'finished'
+    print("i is equals to " + str(st.session_state.count))
+    user_code = st.code(returned_data[keys[st.session_state.count]].old_code, language='python', line_numbers=True)
+    # Display the user's code with syntax highlighting
+    improved_code = st.code(returned_data[keys[st.session_state.count]].new_code, language='python', line_numbers=True)
 
-    # Display the suggested code with syntax highlighting
-    suggested_code = st.code(code, language='python', line_numbers=True)
+    explanation = st.code(returned_data[keys[st.session_state.count]].comment, language='python', line_numbers=True)
 
 if st.session_state.key == 'TestResults':
-    pass
 
-
-
-
-
-
-
+    to_add = []
+    for i in range(len(st.session_state["returned_data"][1])):
+        to_add.append({"Test name":i.name,"Test":i.source_code,"Error": i.error,"Description": i.explanation})
+    df = pd.DataFrame(
+        to_add
+    )
+    edited_df = st.experimental_data_editor(df)
