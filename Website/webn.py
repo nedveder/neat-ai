@@ -1,6 +1,12 @@
+import lib
 import streamlit as st
 import time
 import pandas as pd
+import sys
+import os
+import lib
+import networkx as nx
+
 
 
 class FunctionImprovements:
@@ -9,12 +15,14 @@ class FunctionImprovements:
         self.new_code = new_code
         self.comment = comment
 
+
 class TestResponse:
     def __init__(self, name, source_code, error=None, explanation=None):
         self.name = name
         self.source_code = source_code
         self.error = error
         self.explanation = explanation
+
 
 if 'key' not in st.session_state:
     st.session_state["returned_data"] = None
@@ -23,14 +31,14 @@ if 'key' not in st.session_state:
     st.session_state.key = 'UploadFile'
 
 
-
 def call_api_improve():
     return {"1": FunctionImprovements("old", "new", "your code is bad"),
             "2": FunctionImprovements("old1", "new2", "your code is bad2")}
 
 
 def call_api_test():
-    return [TestResponse("test1", "code1", "error1", "explanation1"), TestResponse("test2", "code2", "error2", "explanation2")]
+    return [TestResponse("test1", "code1", "error1", "explanation1"),
+            TestResponse("test2", "code2", "error2", "explanation2")]
 
 
 def run_improve():
@@ -43,12 +51,11 @@ def run_improve():
     st.session_state.key = 'Improve'
 
 
-
 def run_testing():
     loading = st.empty()
     loading.write('Loading...')
     time.sleep(2)
-    st.session_state["returned_data"] = call_api_test()
+    st.session_state["returned_data"] = st.session_state["server_side"].get_tests_suggestions()
     loading.empty()
     st.session_state.key = 'TestResults'
 
@@ -61,6 +68,7 @@ if st.session_state.key == 'UploadFile':
     ch_upload = st.empty()
     code_data = ch_upload.file_uploader("Upload Code")
     if code_data:
+        st.session_state["server_side"] = ServerSide(code_data)
         st.session_state.key = 'ChooseOperation'
         ch_text.empty()
         ch_upload.empty()
@@ -123,7 +131,7 @@ if st.session_state.key == 'TestResults':
 
     to_add = []
     for i in st.session_state["returned_data"]:
-        to_add.append({"Test name":i.name,"Test":i.source_code,"Error": i.error,"Description": i.explanation})
+        to_add.append({"Test name": i.name, "Test": i.source_code, "Error": i.error, "Description": i.explanation})
     df = pd.DataFrame(
         to_add
     )

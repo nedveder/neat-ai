@@ -6,6 +6,7 @@ import gpt_api
 import backend_api
 import dependency_graph
 from tqdm import tqdm
+import ast
 
 TEST_PROMPTS_FILE = "prompts/test_prompts.json"
 TEST_CODE_FILE = "tests.py"

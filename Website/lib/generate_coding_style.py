@@ -2,9 +2,7 @@ import json
 import re
 
 import gpt_api
-from lib.backend_api import ServerSide
-from lib.function_improvements import FunctionImprovements
-
+from function_improvements import FunctionImprovements
 STYLE_PROMPTS_FILE = "prompts/style_prompts.json"
 
 
@@ -18,7 +16,7 @@ def parse_base_response(response):
     return code, response[matches[1].end():]
 
 
-def get_suggestions(server_side: ServerSide):
+def get_suggestions(server_side):
     with open(STYLE_PROMPTS_FILE) as f:
         prompts = json.load(fp=f)
     GPT = gpt_api.GPT()

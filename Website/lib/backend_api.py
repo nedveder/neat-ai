@@ -4,7 +4,7 @@ from typing import Dict, List
 import generate_tests
 import generate_coding_style
 from function_improvements import FunctionImprovements
-from lib import dependency_graph
+import dependency_graph
 
 
 class ServerSide:

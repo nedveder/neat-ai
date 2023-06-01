@@ -1,5 +1,4 @@
 import ast
-import networkx as nx
 
 
 def extract_functions(node):
