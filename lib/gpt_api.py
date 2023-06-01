@@ -3,11 +3,11 @@ import openai
 
 
 class GPT:
-    def __init__(self, model="gpt-3.5-turbo", max_tokens=1024):
+    def __init__(self, model="gpt-3.5-turbo", max_tokens=2048):
         self.model_ = model
         self.max_tokens_ = max_tokens
         openai.organization = "org-W1xrGR4WAmmdeqk5vOBvlntj"
-        openai.api_key = "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"
+        openai.api_key = ""
         self.messages_ = []
 
     # DEAL WITH CHANGES TO MODEL
@@ -52,7 +52,8 @@ class GPT:
         :return:
         """
         self.messages_.append({"role": "user", "content": content})
-        response = openai.ChatCompletion.create(model=self.model_, messages=self.messages_)
+        response = openai.ChatCompletion.create(model=self.model_, messages=self.messages_, temperature=0,
+                                                max_tokens=self.max_tokens_)
         assistant_msg = response['choices'][0]['message']['content']
         self.messages_.append({"role": "assistant", "content": assistant_msg})
         return assistant_msg

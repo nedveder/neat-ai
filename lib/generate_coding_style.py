@@ -1,35 +1,33 @@
+import json
+import re
+
+import gpt_api
+from lib.backend_api import ServerSide
+from lib.function_improvements import FunctionImprovements
+
+STYLE_PROMPTS_FILE = "prompts/style_prompts.json"
 
 
-def opening_prompt():
-    """We are about to check the coding style of the project.
-We will check function by function and file by file.
-For every function we will check the following:
-1. Function naming: Functions should be named using a lowercase, with words separated by underscores.
+def parse_base_response(response):
+    pattern = "```"
+    regex = re.compile(pattern)
+    matches = list(regex.finditer(response))
+    code = response[matches[0].end(): matches[1].start()]
+    if response.startswith("python"):
+        code = code[6:]
+    return code, response[matches[1].end():]
 
-2. Function arguments: Function arguments should be named the same way as variables, using lowercase letters and words separated by underscores.
 
-3. Docstrings: Functions should have a docstring that describes what the function does.
+def get_suggestions(server_side: ServerSide):
+    with open(STYLE_PROMPTS_FILE) as f:
+        prompts = json.load(fp=f)
+    GPT = gpt_api.GPT()
+    GPT.add_system_message(prompts.get('base_prompt')[0])
 
-4. Indentation: Code inside the function should be indented by exactly four spaces.
-
-5. Function length: Functions should be kept reasonably short and only perform a single logical operation.
-
-6. Function structure: Functions should be structured in a way that's easy to read and understand, with clear separation between different sections of code.
-
-7. Return values: Functions should clearly indicate what they return, and should only return values of the appropriate type.
-
-8. Error handling: Functions should handle errors and exceptions in a consistent and appropriate way.
-
-9. Global variables: Functions should avoid using or modifying global variables whenever possible.
-
-10. Use of white space: Proper spacing and blank lines should be used throughout the function to improve readability and make the code easier to follow.
-
-11. Comments: Comments should be used sparingly to explain complex sections of code or to describe the intent behind certain decisions.
-"""
-
-def check_function_name(function_name):
- """Check the coding style of the function '???' in the file '***' according to the parameters from before."""
-
-def improvements_function():
-    """What are the improvements that can be made to the function '???' in the file '***' according to the parameters from before?
-     Write them down in the text box below."""
+    suggestions = {f: [] for f in server_side.functions_}
+    for func in suggestions.keys():
+        old_code = server_side.get_function_source(func)
+        response = GPT.chat(server_side.get_function_source(func))
+        new_code, explanation = parse_base_response(response)
+        suggestions[func] = [FunctionImprovements(old_code, new_code, explanation)]
+    return suggestions
