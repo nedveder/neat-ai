@@ -19,7 +19,7 @@ class ServerSide:
         self.functions_ = dependency_graph.build_topological_sort(code)
         self.ast_tree_ = ast.parse(code)
 
-    def get_suggestions(self, preferences: Dict) -> Dict[str, List[FunctionImprovements]]:
+    def get_suggestions(self, preferences: Dict):
         """
         The function will recieve a python code string and return a list of suggestions based on the preferences
             specified.
@@ -30,18 +30,19 @@ class ServerSide:
         if self.code_ is None:
             raise Exception("Code is not set, please call set_code first")
 
-        suggestions = {f: [] for f in self.functions_}
+        style_suggestions = dict()
+        test_suggestions = dict()
         if preferences['style']:
             style_suggestions = generate_coding_style.get_suggestions(self)
             for function_name, function_suggestions in style_suggestions.items():
-                suggestions[function_name].extend(function_suggestions)
+                style_suggestions[function_name] = function_suggestions
 
         if preferences['tests']:
             test_suggestions = generate_tests.get_suggestions(self, self.code_, preferences['tests'])
             for function_name, function_suggestions in test_suggestions.items():
-                suggestions[function_name].extend(function_suggestions)
+                test_suggestions[function_name] = function_suggestions
 
-        return suggestions
+        return style_suggestions, test_suggestions
 
     def get_function_source(self, function_name):
         # Get the start and end line numbers of the function definition
@@ -82,5 +83,5 @@ if __name__ == '__main__':
     with open("test_code/test2.py") as f:
         code = f.read()
     server_side = ServerSide(code)
-    suggestions = server_side.get_suggestions({'style': True, 'tests': False})
+    suggestions = server_side.get_suggestions({'style': True, 'tests': True})
     pass
