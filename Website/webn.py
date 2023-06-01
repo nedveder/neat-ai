@@ -37,8 +37,8 @@ def call_api_improve():
 
 
 def call_api_test():
-    return [TestResponse("test1", "code1", "error1", "explanation1"),
-            TestResponse("test2", "code2", "error2", "explanation2")]
+    return [TestResponse("testfffffffffffffff1", "cofffffffffffffffsssde1", "errosssssssssssssssssssssr1", "explansssssssssssssssss\nsssssssssssss\nssssss\nsssssssssssssssssssssssssssssssssssssssssation1"),
+            TestResponse("test2", "code2", None, "explanation2")]
 
 
 def run_improve():
@@ -131,7 +131,10 @@ if st.session_state.key == 'TestResults':
 
     to_add = []
     for i in st.session_state["returned_data"]:
-        to_add.append({"Test name": i.name, "Test": i.source_code, "Error": i.error, "Description": i.explanation})
+        status = "✔️"
+        if i.error == None:
+            status = "❌"
+        to_add.append({"Test name": i.name, "Test": i.source_code, "Error": i.error, "Description (Expendable)": i.explanation,"Status":status})
     df = pd.DataFrame(
         to_add
     )
