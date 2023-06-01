@@ -32,12 +32,12 @@ class ServerSide:
 
         suggestions = {f: [] for f in self.functions_}
         if preferences['style']:
-            style_suggestions = generate_coding_style.get_suggestions(self.code_, preferences['style'])
+            style_suggestions = generate_coding_style.get_suggestions(self, self.code_, preferences['style'])
             for function_name, function_suggestions in style_suggestions.items():
                 suggestions[function_name].extend(function_suggestions)
 
         if preferences['tests']:
-            test_suggestions = generate_tests.get_suggestions(self.code_, preferences['tests'])
+            test_suggestions = generate_tests.get_suggestions(self, self.code_, preferences['tests'])
             for function_name, function_suggestions in test_suggestions.items():
                 suggestions[function_name].extend(function_suggestions)
 
