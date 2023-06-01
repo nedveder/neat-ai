@@ -1,56 +1,49 @@
-
+python
 import unittest
-from typing import List
+from mymodule import input_list, inner_product, primes_for_asafi
 
-def is_partial_solution(board: List[List[int]]) -> bool:
-    """
-    checks if the solution is the only solution or only a partial one
-    :param board: a board with some solution, partial or full
-    :return: True if partial solution, False if only solution
-    """
-    for row in board:
-        for cell in row:
-            if cell == -1:
-                return True
-    return False
 
-class PartialSolutionTest(unittest.TestCase):
-    def test_partial_solution(self):
-        # Test with a board containing some incomplete rows and without -1s.
-        board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-        self.assertTrue(is_partial_solution(board))
-        
-        # Test with a board containing some incomplete rows and with -1s.
-        board = [[1, 2, 3], [4, -1, 6], [7, 8, 9]]
-        self.assertTrue(is_partial_solution(board))
-        
-        # Test with a board that's fully complete and without -1s.
-        board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-        self.assertFalse(is_partial_solution(board))
-        
-        # Test with a board that's fully complete and with -1s.
-        board = [[1, 2, 3], [4, 5, -1], [7, 8, 9]]
-        self.assertFalse(is_partial_solution(board))
-        
-        # Test with an empty board.
-        board = [[]]
-        self.assertFalse(is_partial_solution(board))
-        
-        # Test with a board containing only -1s.
-        board = [[-1, -1], [-1, -1]]
-        self.assertTrue(is_partial_solution(board))
-        
-        # Test with a board containing only one row and column.
-        board = [[1], [-1]]
-        self.assertTrue(is_partial_solution(board))
-        
-        # Test with a board containing one row and column and no -1s.
-        board = [[1], [2]]
-        self.assertFalse(is_partial_solution(board))
-        
-        # Test with a board that contains only -1s and has no rows or columns.
-        board = [[]]
-        self.assertTrue(is_partial_solution(board))
-        
-if __name__ == '__main__':
-    unittest.main(argv=[''], exit=False)
+class TestInputList(unittest.TestCase):
+    def test_empty_input(self):
+        self.assertEqual(input_list(), [0])
+
+    def test_single_input(self):
+        user_input = "5\n"
+        expected_output = [5.0, 5.0]
+        with unittest.mock.patch('builtins.input', return_value=user_input):
+            self.assertEqual(input_list(), expected_output)
+
+    def test_multiple_inputs(self):
+        user_input = "1\n2\n3\n"
+        expected_output = [1.0, 2.0, 3.0, 6.0]
+        with unittest.mock.patch('builtins.input', return_value=user_input):
+            self.assertEqual(input_list(), expected_output)
+
+    def test_invalid_input(self):
+        user_input = "1\n2\na\n"
+        with unittest.mock.patch('builtins.input', return_value=user_input):
+            self.assertRaises(ValueError, input_list)
+
+
+class TestInnerProduct(unittest.TestCase):
+    def test_valid_input(self):
+        vec_1 = [1, 2, 3]
+        vec_2 = [4, 5, 6]
+        expected_output = 32
+        self.assertEqual(inner_product(vec_1, vec_2), expected_output)
+
+    def test_invalid_input(self):
+        vec_1 = [1, 2, 3]
+        vec_2 = [4, 5]
+        self.assertIsNone(inner_product(vec_1, vec_2))
+
+
+class TestPrimesForAsafi(unittest.TestCase):
+    def test_zero_input(self):
+        self.assertEqual(primes_for_asafi(0), [])
+
+    def test_valid_input(self):
+        self.assertEqual(primes_for_asafi(5), [2, 3, 5, 7, 11])
+
+    def test_invalid_input(self):
+        self.assertRaises(TypeError, primes_for_asafi, "a")

@@ -26,6 +26,7 @@ def get_suggestions(server_side: ServerSide):
 
     suggestions = {f: [] for f in server_side.functions_}
     for func in suggestions.keys():
+        GPT.clear_messages()
         old_code = server_side.get_function_source(func)
         response = GPT.chat(server_side.get_function_source(func))
         new_code, explanation = parse_base_response(response)

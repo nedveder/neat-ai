@@ -1,6 +1,6 @@
 import streamlit as st
 import time
-
+import pandas as pd
 
 
 class FunctionImprovements:
@@ -42,7 +42,7 @@ def run_testing():
     loading = st.empty()
     loading.write('Loading...')
     time.sleep(2)
-    call_api_test()
+    st.session_state["returned_data"] = call_api_test()
     loading.empty()
     st.session_state.key = 'TestResults'
 
@@ -114,4 +114,11 @@ if st.session_state.key == 'Improve':
     explanation = st.code(returned_data[keys[st.session_state.count]].comment, language='python', line_numbers=True)
 
 if st.session_state.key == 'TestResults':
-    pass
+
+    to_add = []
+    for i in range(len(st.session_state["returned_data"][1])):
+        to_add.append({"Test name":i.name,"Test":i.source_code,"Error": i.error,"Description": i.explanation})
+    df = pd.DataFrame(
+        to_add
+    )
+    edited_df = st.experimental_data_editor(df)
