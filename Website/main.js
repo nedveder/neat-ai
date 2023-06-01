@@ -29,15 +29,13 @@ function compareFiles() {
     formData.append("file1", file1);
     formData.append("file2", file2);
 
-    $.ajax({
-        url: "C:\\Users\\talsu\\Desktop\\UNIVERSITY\\HackathonAI\\neat-ai\\MakeMagic.py",
-        type: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            // Handle the response from the server
-            console.log(response);
-        }
-    });
+    fetch('http://localhost:3000/run-python')
+        .then(response => response.text())
+        .then(output => {
+            console.log(output); // Log the output of the Python script
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
 }

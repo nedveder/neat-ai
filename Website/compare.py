@@ -1,27 +1,25 @@
-from flask import Flask, request, jsonify
+def compare_files(file1_path, file2_path):
+    with open(file1_path, 'r') as file1:
+        content1 = file1.read()
 
-app = Flask(__name__)
+    with open(file2_path, 'r') as file2:
+        content2 = file2.read()
 
-@app.route('/compare', methods=['POST'])
-def compare_files():
-    print("HI")
-    file1 = request.files['file1']
-    file2 = request.files['file2']
-
-    # Process the files, perform comparison logic, and generate a result file
-
-    # Example: Concatenate the contents of file1 and file2
-    content1 = file1.read().decode('utf-8')
-    content2 = file2.read().decode('utf-8')
-    result_content = content1 + content2
-
-    # Save the result to a file
-    result_file = 'result.txt'
-    with open(result_file, 'w') as f:
-        f.write(result_content)
-
-    # Return the result file to the client
-    return jsonify({'result_file': result_file})
+    # Compare the contents of the files
+    if content1 == content2:
+        return "Files are identical"
+    else:
+        return "Files are different"
 
 if __name__ == '__main__':
-    app.run()
+    import sys
+
+    # Get the file paths from command-line arguments
+    file1_path = sys.argv[1]
+    file2_path = sys.argv[2]
+
+    # Call the compare_files function
+    result = compare_files(file1_path, file2_path)
+
+    # Print the result
+    print(result)
