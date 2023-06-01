@@ -1,9 +1,8 @@
-import dependency_graph
-import ast
 import json
 import gpt_api
 import subprocess
 import re
+
 
 TEST_PROMPTS_FILE = "prompts/test_prompts.json"
 TEST_CODE_FILE = "tests.py"
@@ -71,45 +70,6 @@ def run_tests(source_code):
         funcResponses.append(function_response)
     return funcResponses
 
-
-def get_function_source(source_code, function_name, tree=None):
-    if tree is None:
-        tree = ast.parse(source_code)
-    # Get the start and end line numbers of the function definition
-    function_node = None
-    function_index = 0
-    for index, node in enumerate(tree.body):
-        if isinstance(node, ast.FunctionDef) and node.name == function_name:
-            function_node = node
-            function_index = index
-            break
-    if not function_node:
-        return None
-
-    start_line = function_node.lineno
-    # Extract the lines containing the function
-    lines = source_code.split('\n')
-
-    if function_index == len(tree.body) - 1:
-        function_lines = lines[start_line - 1:]
-    else:
-        function_lines = lines[start_line - 1: tree.body[function_index + 1].lineno - 1]
-    # Join the lines back into a string
-    function_source = '\n'.join(function_lines)
-    return function_source
-
-
-def get_sources(code):
-    """
-    Gets source code and returns source codes of functions by topological sort order.
-    :param code:
-    :return:
-    """
-    functions = dependency_graph.build_topological_sort(code)
-    ast_tree = ast.parse(code)
-    for function_name in reversed(functions):
-        function_source = get_function_source(code, function_name, tree=ast_tree)
-        yield function_source
 
 
 if __name__ == '__main__':
