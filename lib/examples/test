@@ -1,0 +1,45 @@
+import unittest
+from typing import List
+from mymodule import is_partial_solution
+class TestIsPartialSolution(unittest.TestCase):
+    def test_only_full_solution(self):
+        # Test when board is completely filled and valid
+        board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+        self.assertFalse(is_partial_solution(board))
+    def test_partial_solution(self):
+        # Test when board has empty cell(s)
+        board = [[1, 2, 3], [4, -1, 6], [7, 8, 9]]
+        self.assertTrue(is_partial_solution(board))
+    def test_only_one_cell(self):
+        # Test when board only has one cell
+        board = [[-1]]
+        self.assertTrue(is_partial_solution(board))
+    def test_all_cells_empty(self):
+        # Test when board is empty
+        board = [[]]
+        self.assertTrue(is_partial_solution(board))
+    def test_multiple_empty_rows(self):
+        # Test when board has multiple empty rows
+        board = [[1, 2, 3], [], [4, -1, 6], [], [7, 8, 9]]
+        self.assertTrue(is_partial_solution(board))
+    def test_multiple_empty_columns(self):
+        # Test when board has multiple empty columns
+        board = [[1, 2, 3, -1], [4, 5, 6, -1], [7, 8, 9, -1]]
+        self.assertTrue(is_partial_solution(board))
+    def test_invalid_negative_values(self):
+        # Test when board has negative values other than -1
+        board = [[1, -2, 3], [4, 5, 6], [7, 8, -9]]
+        with self.assertRaises(ValueError):
+            is_partial_solution(board)
+    def test_invalid_float_values(self):
+        # Test when board has float or non-integer values
+        board = [[1, 2.5, 3], [4, 5, 6], [7, 8, 9.0]]
+        with self.assertRaises(TypeError):
+            is_partial_solution(board)
+    def test_invalid_string_values(self):
+        # Test when board has non-numeric string values
+        board = [[1, 'a', 3], [4, 5, 6], [7, 8, 9]]
+        with self.assertRaises(TypeError):
+            is_partial_solution(board)
+if __name__ == '__main__':
+    unittest.main()

@@ -1,13 +1,13 @@
 import os
-import streamlit as st
 import openai
 
+
 class GPT:
-    def __init__(self, model="gpt-3.5-turbo", max_tokens=128):
+    def __init__(self, model="gpt-3.5-turbo", max_tokens=1024):
         self.model_ = model
         self.max_tokens_ = max_tokens
-        openai.organization = "org-JvNNMeY6tN2WKgUQVpZRFYm1"
-        openai.api_key = os.environ["OPEN_AI_KEY"]
+        openai.organization = "org-W1xrGR4WAmmdeqk5vOBvlntj"
+        openai.api_key = "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"
         self.messages_ = []
 
     # DEAL WITH CHANGES TO MODEL

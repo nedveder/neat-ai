@@ -1,6 +1,5 @@
 import ast
 import networkx as nx
-import matplotlib.pyplot as plt
 
 
 def extract_functions(node):
@@ -19,9 +18,8 @@ def extract_function_calls(node):
     Extracts all function calls from an AST node.
     """
     function_calls = []
-    if isinstance(node, ast.Call):
-        if isinstance(node.func, ast.Name):
-            function_calls.append(node.func.id)
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+        function_calls.append(node.func.id)
     for child_node in ast.iter_child_nodes(node):
         function_calls.extend(extract_function_calls(child_node))
     return function_calls
@@ -45,18 +43,6 @@ def build_dependency_graph(functions):
     return graph
 
 
-def draw_dependency_graph(graph):
-    """
-    Draws the dependency graph using NetworkX and Matplotlib.
-    """
-    pos = nx.spring_layout(graph)
-    nx.draw_networkx(graph, pos, with_labels=True, node_size=1000, node_color='lightblue', edge_color='gray',
-                     arrowsize=20)
-    plt.title("Function Dependency Graph")
-    plt.axis('off')
-    plt.show()
-
-
 def build_topological_sort(source_code):
     """Returns a list of functions sorted topologically"""
     ast_tree = ast.parse(source_code)
@@ -65,9 +51,3 @@ def build_topological_sort(source_code):
     sorted_functions = list(nx.topological_sort(graph))
     return sorted_functions
 
-
-if __name__ == '__main__':
-    file = r"C:\Users\alonv\PycharmProjects\ex8_(1)\nonogram.py"
-    with open(file, 'r') as f:
-        code = f.read()
-    print(build_topological_sort(code))
