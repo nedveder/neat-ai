@@ -1,6 +1,7 @@
-# Opening prompt
 
-We are about to check the coding style of the project.
+
+def opening_prompt():
+    """We are about to check the coding style of the project.
 We will check function by function and file by file.
 For every function we will check the following:
 1. Function naming: Functions should be named using a lowercase, with words separated by underscores.
@@ -24,11 +25,11 @@ For every function we will check the following:
 10. Use of white space: Proper spacing and blank lines should be used throughout the function to improve readability and make the code easier to follow.
 
 11. Comments: Comments should be used sparingly to explain complex sections of code or to describe the intent behind certain decisions.
+"""
 
-# Function prompt feedback
+def check_function_name(function_name):
+ """Check the coding style of the function '???' in the file '***' according to the parameters from before."""
 
-Check the coding style of the function '???' in the file '***' according to the parameters from before.
-
-# Function prompt improvement
-
-What are the improvements that can be made to the function '???' in the file '***' according to the parameters from before? Write them down in the text box below.
+def improvements_function():
+    """What are the improvements that can be made to the function '???' in the file '***' according to the parameters from before?
+     Write them down in the text box below."""
