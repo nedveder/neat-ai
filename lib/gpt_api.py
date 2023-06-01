@@ -1,5 +1,5 @@
 import os
-
+import streamlit as st
 import openai
 
 
@@ -40,6 +40,12 @@ class GPT:
         """
         self.messages_ = self.messages_[0] + self.messages_[k:]
 
+    def clear_messages(self):
+        """
+        Clears the messages list
+        """
+        self.messages_ = [self.messages_[0]]
+
     def chat(self, content):
         """
 
@@ -51,3 +57,8 @@ class GPT:
         assistant_msg = response['choices'][0]['message']['content']
         self.messages_.append({"role": "assistant", "content": assistant_msg})
         return assistant_msg
+
+
+if __name__ == '__main__':
+    gpt = GPT()
+    print(gpt.chat("Hello"))
