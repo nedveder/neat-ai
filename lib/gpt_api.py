@@ -1,6 +1,7 @@
 import os
 
 import openai
+import streamlit
 
 
 class GPT:
