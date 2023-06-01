@@ -64,8 +64,10 @@ def parse_base_response(response):
     pattern = "```"
     regex = re.compile(pattern)
     matches = list(regex.finditer(response))
+    if len(matches) == 0:
+        return response
     response = response[matches[0].end(): matches[1].start()]
-    if response.startswith("python"):
+    if not response.startswith("python"):
         response = response[6:]
     return response
 
@@ -134,7 +136,7 @@ def get_function_source(source_code, tree, function_name):
 
 if __name__ == '__main__':
     # file = r"C:\Users\alonv\PycharmProjects\neat-ai\lib\test_code\test1.py"
-    file = r"C:\Users\alonv\PycharmProjects\ex8_(1)\nonogram.py"
+    file = r"C:\Users\alonv\PycharmProjects\neat-ai\lib\test_code\test2.py"
     with open(file, 'r') as f:
         code = f.read()
     responses = get_suggestions(backend_api.ServerSide(code), code)
