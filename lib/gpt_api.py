@@ -3,7 +3,7 @@ import openai
 
 
 class GPT:
-    def __init__(self, model="gpt-3.5-turbo", max_tokens=128):
+    def __init__(self, model="gpt-3.5-turbo", max_tokens=1024):
         self.model_ = model
         self.max_tokens_ = max_tokens
         openai.organization = "org-W1xrGR4WAmmdeqk5vOBvlntj"
