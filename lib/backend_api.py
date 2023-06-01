@@ -32,7 +32,7 @@ class ServerSide:
 
         suggestions = {f: [] for f in self.functions_}
         if preferences['style']:
-            style_suggestions = generate_coding_style.get_suggestions(self, self.code_, preferences['style'])
+            style_suggestions = generate_coding_style.get_suggestions(self)
             for function_name, function_suggestions in style_suggestions.items():
                 suggestions[function_name].extend(function_suggestions)
 
@@ -75,3 +75,10 @@ class ServerSide:
         for function_name in reversed(self.functions_):
             function_source = ServerSide.get_function_source(self.code_, function_name)
             yield function_source
+
+
+if __name__ == '__main__':
+    code = ""
+    with open("test_code/test1.py") as f:
+        code = f.read()
+    server_side = ServerSide(code)
