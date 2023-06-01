@@ -79,7 +79,7 @@ class ServerSide:
 
 if __name__ == '__main__':
     code = ""
-    with open("test_code/test1.py") as f:
+    with open("test_code/test2.py") as f:
         code = f.read()
     server_side = ServerSide(code)
     suggestions = server_side.get_suggestions({'style': True, 'tests': False})
