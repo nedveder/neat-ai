@@ -1,4 +1,5 @@
 import ast
+from typing import Dict, List
 
 import generate_tests
 import generate_coding_style
@@ -18,22 +19,27 @@ class ServerSide:
         self.functions_ = dependency_graph.build_topological_sort(code)
         self.ast_tree_ = ast.parse(code)
 
-    def get_suggestions(self, preferences):
+    def get_suggestions(self, preferences: Dict) -> Dict[str, List[FunctionImprovements]]:
         """
         The function will recieve a python code string and return a list of suggestions based on the preferences
             specified.
         :param preferences: A dictionary of preferences
-        :param code: python code in string format
-        :return: A dictinary of suggestions, each key is a function name and the value is a list of FunctionImprovements
+        :return: A dictionary of suggestions, each key is a function name and the value is a list of FunctionImprovements
          objects
         """
-        suggestions = {}
+        if self.code_ is None:
+            raise Exception("Code is not set, please call set_code first")
 
+        suggestions = {f: [] for f in self.functions_}
         if preferences['style']:
-            suggestions = generate_coding_style.get_suggestions(self.code_, preferences['style'])
+            style_suggestions = generate_coding_style.get_suggestions(self.code_, preferences['style'])
+            for function_name, function_suggestions in style_suggestions.items():
+                suggestions[function_name].extend(function_suggestions)
 
         if preferences['tests']:
-            suggestions = generate_tests.get_suggestions(self.code_, preferences['tests'])
+            test_suggestions = generate_tests.get_suggestions(self.code_, preferences['tests'])
+            for function_name, function_suggestions in test_suggestions.items():
+                suggestions[function_name].extend(function_suggestions)
 
         return suggestions
 
