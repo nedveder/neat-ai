@@ -9,7 +9,7 @@ class GPT:
         self.model_ = model
         self.max_tokens_ = max_tokens
         openai.organization = "org-JvNNMeY6tN2WKgUQVpZRFYm1"
-        openai.api_key = os.environ["OPEN_AI_KEY"]
+        openai.api_key = "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"
         self.messages_ = []
 
     # DEAL WITH CHANGES TO MODEL

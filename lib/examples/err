@@ -1,0 +1,32 @@
+FFFF.....
+======================================================================
+FAIL: test_all_cells_empty (__main__.TestIsPartialSolution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "tests.py", line 26, in test_all_cells_empty
+    self.assertTrue(is_partial_solution(board))
+AssertionError: False is not true
+======================================================================
+FAIL: test_invalid_float_values (__main__.TestIsPartialSolution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "tests.py", line 48, in test_invalid_float_values
+    is_partial_solution(board)
+AssertionError: TypeError not raised
+======================================================================
+FAIL: test_invalid_negative_values (__main__.TestIsPartialSolution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "tests.py", line 42, in test_invalid_negative_values
+    is_partial_solution(board)
+AssertionError: ValueError not raised
+======================================================================
+FAIL: test_invalid_string_values (__main__.TestIsPartialSolution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "tests.py", line 54, in test_invalid_string_values
+    is_partial_solution(board)
+AssertionError: TypeError not raised
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+FAILED (failures=4)

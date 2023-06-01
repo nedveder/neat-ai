@@ -3,43 +3,73 @@ import ast
 import json
 import gpt_api
 import subprocess
+import re
 
 TEST_PROMPTS_FILE = "prompts/test_prompts.json"
 TEST_CODE_FILE = "tests.py"
 MY_MODULE_FILE = "mymodule.py"
 
 
-def test_code(source_code, language='python'):
+class FunctionResponse:
+
+    def __init__(self):
+        self.tests = []
+        self.failed_tests = []
+        self.explanations = []
+
+    @staticmethod
+    def fromText(tests, errors):
+        function_sources = FunctionResponse.__extract_functions(tests)
+        failed_tests = []
+        pass
+
+    @staticmethod
+    def __extract_functions(source_code):
+        function_sources = []
+        ast_tree = ast.parse(source_code)
+        unit_tests_class = [item for item in ast_tree.body if type(item) == ast.ClassDef][0]
+        function_names = dependency_graph.extract_functions(unit_tests_class)
+        for function in function_names:
+            function_source = get_function_source(source_code, function.name, tree=unit_tests_class)
+            function_sources.append(function_source)
+        return function_sources
+
+
+def parse_base_response(response):
+    pattern = "```"
+    regex = re.compile(pattern)
+    matches = list(regex.finditer(response))
+    response = response[matches[0].end(): matches[1].start()]
+    if response.startswith("python"):
+        response = response[6:]
+    return response
+
+
+def run_tests(source_code):
     """Generate tests for the python function given in source-code,
     where the documentations of the functions it depends on are listed in
     'dependencies_documentations', and are assumed to be valid and working. """
-    GPT = gpt_api.GPT()
-    function_codes_generator = get_sources(source_code)
-    prompts = []
     with open(TEST_PROMPTS_FILE) as f:
         prompts = json.load(fp=f)
-    base_prompt = prompts.get('base_prompt')[0]
-    GPT.add_system_message(base_prompt)
     with open(MY_MODULE_FILE, 'w') as f:
         f.write(source_code)
-    for function_code in function_codes_generator:
-        response = GPT.chat(function_code)
-        code_response = response[response.find("import"):response.find("main()")+6]
-        with open(TEST_CODE_FILE, 'w') as f:
-            f.write(code_response)
 
+    GPT = gpt_api.GPT()
+    GPT.add_system_message(prompts.get('base_prompt')[0])
+    function_codes_generator = get_sources(source_code)
+    funcResponses = []
+    for function_code in function_codes_generator:
+        GPT.clear_messages()
+        response = GPT.chat(function_code)
+        parsed_response = parse_base_response(response)
+        with open(TEST_CODE_FILE, 'w') as tests_file:
+            tests_file.write(parsed_response)
         p = subprocess.Popen(f"python3 {TEST_CODE_FILE}", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        out, err = p.communicate()
+        _, err = p.communicate()
         error = err.decode('utf-8')
-        if len(error) == 0:
-            print(f"Function tested successfully!")
-        else:
-            print(f"There were some failed tests... AI creating tests review.")
-            print(error)
-            followup_prompt = prompts.get('followup_prompt')[0]
-            response = GPT.chat(followup_prompt + "\n" + error)
-            print(response)
-            exit()
+        function_response = FunctionResponse.fromText(parsed_response, error)
+        funcResponses.append(function_response)
+    return funcResponses
 
 
 def get_function_source(source_code, function_name, tree=None):
@@ -86,4 +116,4 @@ if __name__ == '__main__':
     file = r"C:\Users\alonv\PycharmProjects\ex8_(1)\nonogram.py"
     with open(file, 'r') as f:
         code = f.read()
-    test_code(code)
+    run_tests(code)
