@@ -9,6 +9,12 @@ class FunctionImprovements:
         self.new_code = new_code
         self.comment = comment
 
+class TestResponse:
+    def __init__(self, name, source_code, error=None, explanation=None):
+        self.name = name
+        self.source_code = source_code
+        self.error = error
+        self.explanation = explanation
 
 if 'key' not in st.session_state:
     st.session_state["returned_data"] = None
@@ -24,7 +30,7 @@ def call_api_improve():
 
 
 def call_api_test():
-    pass
+    return [TestResponse("test1", "code1", "error1", "explanation1"), TestResponse("test2", "code2", "error2", "explanation2")]
 
 
 def run_improve():
@@ -116,7 +122,7 @@ if st.session_state.key == 'Improve':
 if st.session_state.key == 'TestResults':
 
     to_add = []
-    for i in range(len(st.session_state["returned_data"][1])):
+    for i in st.session_state["returned_data"]:
         to_add.append({"Test name":i.name,"Test":i.source_code,"Error": i.error,"Description": i.explanation})
     df = pd.DataFrame(
         to_add
