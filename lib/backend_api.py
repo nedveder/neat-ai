@@ -82,3 +82,5 @@ if __name__ == '__main__':
     with open("test_code/test1.py") as f:
         code = f.read()
     server_side = ServerSide(code)
+    suggestions = server_side.get_suggestions({'style': True, 'tests': False})
+    pass
