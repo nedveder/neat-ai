@@ -30,5 +30,5 @@ def get_suggestions(server_side: ServerSide):
         old_code = server_side.get_function_source(func)
         response = GPT.chat(server_side.get_function_source(func))
         new_code, explanation = parse_base_response(response)
-        suggestions[func] = [FunctionImprovements(old_code, new_code, explanation)]
+        suggestions[func] = FunctionImprovements(old_code, new_code, explanation)
     return suggestions

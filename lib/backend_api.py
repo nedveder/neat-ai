@@ -19,26 +19,27 @@ class ServerSide:
         self.functions_ = dependency_graph.build_topological_sort(code)
         self.ast_tree_ = ast.parse(code)
 
-    def get_suggestions(self, preferences: Dict):
+    def get_style_suggestions(self):
         """
         The function will recieve a python code string and return a list of suggestions based on the preferences
             specified.
-        :param preferences: A dictionary of preferences
-        :return: A dictionary of suggestions, each key is a function name and the value is a list of FunctionImprovements
-         objects
+        :return: A dictionary of suggestions, each key is a function name and the value is a FunctionImprovements object
         """
         if self.code_ is None:
             raise Exception("Code is not set, please call set_code first")
 
-        style_suggestions = dict()
-        test_suggestions = []
-        if preferences['style']:
-            style_suggestions = generate_coding_style.get_suggestions(self)
+        return generate_coding_style.get_suggestions(self)
 
-        if preferences['tests']:
-            test_suggestions = generate_tests.get_suggestions(self, self.code_, preferences['tests'])
+    def get_tests_suggestions(self):
+        """
+        The function will recieve a python code string and return a list of suggestions based on the preferences
+            specified.
+        :return: A list of tests run results
+        """
+        if self.code_ is None:
+            raise Exception("Code is not set, please call set_code first")
 
-        return style_suggestions, test_suggestions
+        return generate_tests.get_suggestions(self, self.code_)
 
     def get_function_source(self, function_name):
         # Get the start and end line numbers of the function definition
@@ -79,5 +80,5 @@ if __name__ == '__main__':
     with open("test_code/test2.py") as f:
         code = f.read()
     server_side = ServerSide(code)
-    suggestions = server_side.get_suggestions({'style': True, 'tests': True})
+    suggestions = server_side.get_style_suggestions()
     pass

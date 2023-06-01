@@ -72,7 +72,7 @@ def parse_base_response(response):
     return response
 
 
-def get_suggestions(server_side, source_code, prefrences=[]):
+def get_suggestions(server_side, source_code):
     """Generate tests for the python function given in source-code,
     where the documentations of the functions it depends on are listed in
     'dependencies_documentations', and are assumed to be valid and working. """
