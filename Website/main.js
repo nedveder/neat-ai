@@ -29,6 +29,15 @@ function compareFiles() {
     formData.append("file1", file1);
     formData.append("file2", file2);
 
+    fetch('http://localhost:3000/run-python')
+        .then(response => response.text())
+        .then(output => {
+            console.log(output); // Log the output of the Python script
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
     // $.ajax({
     //     url: "/compare",
     //     type: "POST",
