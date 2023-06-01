@@ -54,7 +54,8 @@ class ServerSide:
         function_source = '\n'.join(function_lines)
         return function_source
 
-    def get_sources(self, code):
+    @staticmethod
+    def get_sources(code):
         """
         Gets source code and returns source codes of functions by topological sort order.
         :param code:
@@ -63,5 +64,5 @@ class ServerSide:
         functions = dependency_graph.build_topological_sort(code)
         ast_tree = ast.parse(code)
         for function_name in reversed(functions):
-            function_source = self.get_function_source(code, function_name, tree=ast_tree)
+            function_source = ServerSide.get_function_source(code, function_name, tree=ast_tree)
             yield function_source
