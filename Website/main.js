@@ -38,15 +38,4 @@ function compareFiles() {
             console.error('Error:', error);
         });
 
-    // $.ajax({
-    //     url: "/compare",
-    //     type: "POST",
-    //     data: formData,
-    //     processData: false,
-    //     contentType: false,
-    //     success: function (response) {
-    //         // Handle the response from the server
-    //         console.log(response);
-    //     }
-    // });
 }

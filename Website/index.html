@@ -4,11 +4,23 @@
     <meta charset="UTF-8">
     <title>Compare Text Files</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 </head>
 <body>
 <h1>Review my code</h1>
 
 <div class="container">
+    <div class="box">
+        <h2>Test python</h2>
+        <py-script>
+            print('Now you can!')
+            for i in range(10):
+                print(i)
+
+        </py-script>|
+    </div>
+
     <div class="box">
         <h2>My Code</h2>
         <input type="file" id="file1" onchange="handleFile1(event)">

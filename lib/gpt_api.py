@@ -1,8 +1,6 @@
 import os
 import streamlit as st
 import openai
-import streamlit
-
 
 class GPT:
     def __init__(self, model="gpt-3.5-turbo", max_tokens=128):
