@@ -95,17 +95,12 @@ if st.session_state.key == 'Improve':
 if st.session_state.key == 'TestResults':
 
     to_add = []
+    for i in range(len(return_data[1])):
+        to_add.append({"Test name":i.name,"Test":i.source_code,"Error": i.error,"Description": i.explanation})
     df = pd.DataFrame(
-        [
-            {"Test": "st.selectbox", "Short description": "...", "Status": "Fail"},
-            {"Test": "st.balloons", "Short description": "...", "Status": "Fail"},
-            {"Test": "st.time_input", "Short description": "...", "Status": "Fail"},
-        ]
+        to_add
     )
     edited_df = st.experimental_data_editor(df)
-
-    # favorite_command = edited_df.loc[edited_df["rating"].idxmax()]["command"]
-    # st.markdown(f"Your favorite command is **{favorite_command}** 🎈")
 
 
 
