@@ -15,14 +15,16 @@ def test_code(source_code, language='python'):
     'dependencies_documentations', and are assumed to be valid and working. """
     GPT = gpt_api.GPT()
     function_codes_generator = get_sources(source_code)
+    prompts = []
     with open(TEST_PROMPTS_FILE) as f:
-        prompt = json.load(fp=f).get('test_case')[0].replace('{LANGUAGE}', language)
-        GPT.add_system_message(prompt)
+        prompts = json.load(fp=f)
+    base_prompt = prompts.get('base_prompt')[0]
+    GPT.add_system_message(base_prompt)
     with open(MY_MODULE_FILE, 'w') as f:
         f.write(source_code)
     for function_code in function_codes_generator:
         response = GPT.chat(function_code)
-        code_response = response[response.find(r"```python") + 9:response.rfind(r"```")]
+        code_response = response[response.find("import"):response.find("main()")+6]
         with open(TEST_CODE_FILE, 'w') as f:
             f.write(code_response)
 
@@ -34,7 +36,8 @@ def test_code(source_code, language='python'):
         else:
             print(f"There were some failed tests... AI creating tests review.")
             print(error)
-            response = GPT.chat(error)
+            followup_prompt = prompts.get('followup_prompt')[0]
+            response = GPT.chat(followup_prompt + "\n" + error)
             print(response)
             exit()
 
